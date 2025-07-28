@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contingencia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #EDEDED;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #170A9D 0%, #170A9D 100%);
+            color: #ffffff;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -5%;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transform: rotate(45deg);
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            font-weight: bold;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            font-style: italic;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: calc(100vh - 70px);
+        }
+
+        .search-section {
+            background: #ffffff;
+            padding: 20px;
+            border-bottom: 1px solid #393839;
+        }
+
+        .search-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            max-width: 800px;
+        }
+
+        .search-row label {
+            font-weight: normal;
+            min-width: 250px;
+            font-size: 14px;
+            color: #393839;
+        }
+
+        .search-input {
+            padding: 6px 10px;
+            border: 1px solid #393839;
+            border-radius: 3px;
+            font-size: 14px;
+            width: 200px;
+            background-color: #ffffff;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #170A9D;
+            box-shadow: 0 0 3px rgba(23, 10, 157, 0.3);
+        }
+
+        .btn-search {
+            background: linear-gradient(135deg, #170A9D 0%, #170A9D 100%);
+            color: #ffffff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .btn-search:hover {
+            opacity: 0.9;
+        }
+
+        .client-info {
+            background: #ffffff;
+            padding: 15px 20px;
+            border: 1px solid #393839;
+            margin: 15px 20px;
+            display: none;
+        }
+
+        .client-info h3 {
+            background: #EDEDED;
+            padding: 8px 10px;
+            margin: -15px -20px 10px -20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-bottom: 1px solid #393839;
+            color: #393839;
+        }
+
+        .client-info-row {
+            font-size: 14px;
+            color: #393839;
+        }
+
+        .client-info-row strong {
+            display: inline-block;
+            min-width: 80px;
+            color: #170A9D;
+        }
+
+        .obligations-table {
+            margin: 15px 20px;
+            border: 1px solid #393839;
+            display: none;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        th {
+            background: linear-gradient(135deg, #170A9D 0%, #170A9D 100%);
+            color: #ffffff;
+            padding: 8px 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 11px;
+            border: 1px solid #393839;
+        }
+
+        td {
+            padding: 6px 4px;
+            text-align: center;
+            border: 1px solid #393839;
+            font-size: 11px;
+            color: #393839;
+        }
+
+        tr:nth-child(even) {
+            background-color: #EDEDED;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        .checkbox-cell {
+            width: 40px;
+        }
+
+        .checkbox-cell input[type="checkbox"] {
+            transform: scale(1.1);
+            accent-color: #170A9D;
+        }
+
+        .action-section {
+            background: #ffffff;
+            padding: 20px;
+            margin: 15px 20px;
+            border: 1px solid #393839;
+            display: none;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 3px;
+            color: #170A9D;
+        }
+
+        .form-group input, .form-group select {
+            padding: 4px 6px;
+            border: 1px solid #393839;
+            border-radius: 2px;
+            font-size: 12px;
+            height: 24px;
+            background-color: #ffffff;
+            color: #393839;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #170A9D;
+            box-shadow: 0 0 3px rgba(23, 10, 157, 0.3);
+        }
+
+        .form-group select {
+            background-color: #ffffff;
+        }
+
+        .comment-section {
+            margin-top: 15px;
+        }
+
+        .comment-section label {
+            font-size: 13px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            color: #170A9D;
+        }
+
+        .comment-section textarea {
+            width: 100%;
+            height: 80px;
+            padding: 8px;
+            border: 1px solid #393839;
+            border-radius: 2px;
+            resize: vertical;
+            font-size: 12px;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #393839;
+        }
+
+        .comment-section textarea:focus {
+            outline: none;
+            border-color: #170A9D;
+            box-shadow: 0 0 3px rgba(23, 10, 157, 0.3);
+        }
+
+        .negotiation-table {
+            margin: 15px 20px;
+            border: 1px solid #393839;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #393839;
+            display: none;
+        }
+
+        .loading-spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #EDEDED;
+            border-top: 3px solid #170A9D;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 10px 15px;
+            margin: 10px 20px;
+            border-radius: 3px;
+            display: none;
+            font-size: 13px;
+        }
+
+        .message.error {
+            background: rgba(245, 127, 34, 0.1);
+            color: #393839;
+            border: 1px solid #F57F22;
+        }
+
+        .message.success {
+            background: rgba(23, 10, 157, 0.1);
+            color: #170A9D;
+            border: 1px solid #170A9D;
+        }
+
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border: 1px solid #393839;
+            border-top: none;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #EDEDED;
+            font-size: 12px;
+        }
+
+        .suggestion-item:hover {
+            background-color: #EDEDED;
+        }
+
+        .suggestion-id {
+            font-weight: bold;
+            color: #170A9D;
+        }
+
+        .suggestion-name {
+            color: #393839;
+            font-size: 11px;
+        }
+
+        .search-input-container {
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-row label {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Contingencia</h1>
+    </div>
+
+    <div class="container">
+        <div class="search-section">
+            <div class="search-row">
+                <label>Ingresa el número de identificación del cliente</label>
+                <div class="search-input-container">
+                    <input type="text" id="nroIdentificacion" class="search-input" placeholder="Numero de Indentificación" maxlength="20" autocomplete="off">
+                    <div id="suggestions" class="suggestions"></div>
+                </div>
+                <button class="btn-search" id="btnBuscar" onclick="buscarCliente()">Buscar</button>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Buscando datos del cliente...</p>
+        </div>
+
+        <div id="mensaje" class="message"></div>
+
+        <div id="clientInfo" class="client-info">
+            <h3>Información de cliente</h3>
+            <div class="client-info-row">
+                <strong>Nombre:</strong> <span id="nombreCliente"></span>
+            </div>
+        </div>
+
+        <div id="obligationsTable" class="obligations-table">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Selección</th>
+                            <th>No° Obligación</th>
+                            <th>Rec Act.</th>
+                            <th>Días Mora Act.</th>
+                            <th>Último pago</th>
+                            <th>Pago Mínimo Act.</th>
+                            <th>Saldo Mora Act.</th>
+                            <th>Saldo Total Actual</th>
+                            <th>Fecha Pago Act.</th>
+                        </tr>
+                    </thead>
+                    <tbody id="obligationsBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="actionSection" class="action-section">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Tipo de acción:</label>
+                    <select id="tipoAccion">
+                        <option value="">Select...</option>
+                        <option value="AMIL">Asesor Mila</option>
+                        <option value="LL">Llamada</option>
+                        <option value="RL">Retorno de Llamada</option>
+                        <option value="WHAT">Whatsapp</option>
+                        <option value="WHMI">Whatsapp Mila</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Tipo De Resultado:</label>
+                    <select id="tipoResultado">
+                        <option value="">Select...</option>
+                        <option value="AEST">Acepta Estrategia</option>
+                        <option value="CC">Contacto Cliente</option>
+                        <option value="CCSN">Contacto Cliente SIN Negoc</option>
+                        <option value="NC">No contesta</option>
+                        <option value="RV30">CC Despues se comunica</option>
+                        <option value="RV31">CC Compromiso de pago</option>
+                    </select>
+                </div>
+
+               
+                <div class="form-group">
+                    <label>Código tarea:</label>
+                    <select id="codigoTarea">
+                        <option value="">Select...</option>
+                        <option value="RCAL">Recall</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Teléfono:</label>
+                    <input type="text" id="telefono" placeholder="">
+                </div>
+                 <div class="form-group">
+                    <label>Fecha de inicio tarea:</label>
+                    <input type="date" id="fechaInicio">
+                </div>
+                <div class="form-group">
+                    <label>Hora ini Tarea:</label>
+                    <input type="time" id="horaInicio">
+                </div>
+                
+                
+                <div class="form-group">
+                    <label>Motivo De No Pago:</label>
+                    <select id="motivoNoPago">
+                        <option value="">Select...</option>
+                        <option value="APEC">Atraso Pago de Empresa Contratista</option>
+                        <option value="ARCP">Atraso en recaudo cartera proveedores</option>
+                        <option value="AVMP">Aumento en valor de la materia prima</option>
+                        <option value="CERI">Cambio de Empleo con Reducción de Ingresos</option>
+                        <option value="CHAT">Chatbot</option>
+                        <option value="CNMP">Cliente no entrega Motivo</option>
+                        <option value="CNOP">Crédito a nombre de otra Persona</option>
+                        <option value="CNRE">Cliente no recibe Extracto</option>
+                        <option value="CPFE">Cambio en pago de facturas de empresas 30/60/90/120 dias</option>
+                        <option value="DBAN">Demanda al Banco</option>
+                        <option value="DE">Desempleo</option>
+                        <option value="DIFM">Disminución Ingresos Familia</option>
+                        <option value="DISV">Disminución Ventas</option>
+                        <option value="DIV">Divorcio</option>
+                        <option value="DMVH">Daño mecanico del Vehiculo</option>
+                        <option value="EMBC">Embargo Cliente</option>
+                        <option value="ENF">Enfermedad</option>
+                        <option value="ETVH">Escases de trabajo del Vehiculo</option>
+                        <option value="EXT">Extorsión</option>
+                        <option value="FL">Fallecido</option>
+                        <option value="FP">Fuera del País</option>
+                        <option value="FR">Fraude</option>
+                        <option value="HURC">Hurto al Cliente</option>
+                        <option value="HVH">Hurto del Vehiculo</option>
+                        <option value="INAR">Incumplimiento de Arrendamientos</option>
+                        <option value="INCL">Inconvenientes Climáticos</option>
+                        <option value="INCT">Incumpliento de un Tercero</option>
+                        <option value="ITP">Incapacidad Total y Permanente</option>
+                        <option value="IVRC">IVR Call Beta SMP</option>
+                        <option value="LEYP">Ley 1116</option>
+                        <option value="LINS">Ley de Insolvencia</option>
+                        <option value="LIQE">Liquidación Empresa</option>
+                        <option value="LNRE">Licencia no Renumerada</option>
+                        <option value="LVIC">Ley de Victimas</option>
+                        <option value="NAFP">No se ajusta Fecha de Pago</option>
+                        <option value="OLVP">Olvido de Pago</option>
+                        <option value="OPUB">Orden Publico</option>
+                        <option value="PACP">Problemas Acceso Canales de Pago</option>
+                        <option value="PCOS">Problemas Cosechas</option>
+                        <option value="PCPT">Perdida de clientes potenciales</option>
+                        <option value="PFAC">Problemas Facturación</option>
+                        <option value="PFRO">Problema Fronterizo</option>
+                        <option value="PMPD">Precio del mercado por debajo de lo proyectado</option>
+                        <option value="PMVH">Problemas de movilidad del Vehiculo</option>
+                        <option value="POD">Pago de Otras  Deudas</option>
+                        <option value="PODA">Problemas Operativos Débito Automatico</option>
+                        <option value="PPEN">Problemas Penales</option>
+                        <option value="PSPE">Problemas Sector Petróleos</option>
+                        <option value="QUIN">Quiebra de Negocio</option>
+                        <option value="RBAN">Reclamación al Banco</option>
+                        <option value="REDC">Reducción de Comisiones</option>
+                        <option value="SCON">Suspensión de Contrato</option>
+                        <option value="SEDE">Secuestro o Desaparición</option>
+                        <option value="SGAR">Siniestro de la Garantia</option>
+                        <option value="TUDE">Resuelve tu Deuda</option>
+                        <option value="VHST">Vehiculo sin Trabajo</option>
+                        <option value="VSUB">Venta sin Subrogar</option>
+                        <option value="CPD">LIB-Ciclo de pago Davivienda</option>
+                        <option value="CTE">LIB-Contratos temporales</option>
+                        <option value="DMO">LIB-Desconoce mora cliente</option>
+                        <option value="DSP">LIB-Dto.al cliente sin pago empresa</option>
+                        <option value="EEM">LIB-Embargo empresa</option>
+                        <option value="EMCL">82.LIB Embargo Cliente</option>
+                        <option value="EXCO">LIB Exclusion de convenio</option>
+                        <option value="FDA">LIB-Facturacion Davivienda</option>
+                        <option value="IDE">LIB- Iliquidez definitiva empresa</option>
+                        <option value="ITE">LIB-Iliquidez transitoria empresa</option>
+                        <option value="IVA">LIB-Ingresos variables</option>
+                        <option value="LDI">LIB-Localizacion dificultosa</option>
+                        <option value="LICE">LIB Licencia</option>
+                        <option value="LXL">LIB- liquidación por ley empresa</option>
+                        <option value="MEC">LIB-Marcación errada del convenio</option>
+                        <option value="NDI">LIB-No descuento incapacidad cliente</option>
+                        <option value="NDV">LIB-No descuento por vacaciones</option>
+                        <option value="NRN">LIB-No reporte novedades banco</option>
+                        <option value="PCD">LIB-Problemática colocacion Davivienda</option>
+                        <option value="RVE">LIB-Renuencia pago empresa</option>
+                        <option value="SPC">LIB-Sin dto. 1° cuota Davivienda</option>
+                        <option value="SPL">LIB-Sin capac. pago smmlv</option>
+                        <option value="SUSD">LIB Suspension Disciplinaria</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Fecha de finalización tarea:</label>
+                    <input type="date" id="fechaFin">
+                </div>
+                <div class="form-group">
+                    <label>Hora Fin Tarea:</label>
+                    <input type="time" id="horaFin">
+                </div>
+                
+            </div>
+
+            <div class="comment-section">
+                <label>Comentario Acción: "sin caracteres especial"</label>
+                <textarea id="comentario" placeholder="Ingrese sus comentarios aquí..."></textarea>
+            </div>
+
+            
+        </div>
+
+        <div id="negotiationTable" class="negotiation-table">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Obligación</th>
+                            <th>Tipo Acuerdo</th>
+                            <th>Tipo Negociación</th>
+                            <th>Valor</th>
+                            <th>Fecha pago</th>
+                            <th>Fecha Documentación</th>
+                            <th>Saldo Actual Capital</th>
+                        </tr>
+                    </thead>
+                    <tbody id="negotiationBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="display: flex; justify-content: center;">
+            <button id="load-info" class="btn-search" style="display:none;" onclick="cargarInformacion()">Radicar Negociacion</button>
+        </div>
+
+
+
+    <script>
+        // Variables globales
+        let clienteActual = null;
+        let obligacionesActuales = [];
+        let timerSugerencias = null;
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            const input = document.getElementById('nroIdentificacion');
+            input.addEventListener('input', manejarInputBusqueda);
+            input.addEventListener('keypress', manejarEnterBusqueda);
+            input.addEventListener('blur', ocultarSugerencias);
+        });
+
+        function cargarInformacion(){
+          const tipoAccion = document.getElementById("tipoAccion").text;
+          console.log(tipoAccion)
+
+
+
+
+        }
+
+        // ==================== BÚSQUEDA PRINCIPAL ====================
+        function buscarCliente() {
+            const nroIdentificacion = document.getElementById('nroIdentificacion').value.trim();
+            
+            if (!nroIdentificacion) {
+                mostrarMensaje('Por favor, ingrese un número de identificación', 'error');
+                return;
+            }
+
+            mostrarLoading(true);
+            limpiarResultados();
+            deshabilitarBusqueda(true);
+
+            google.script.run
+                .withSuccessHandler(procesarResultadoBusqueda)
+                .withFailureHandler(procesarErrorBusqueda)
+                .obtenerDatosClientePorId(nroIdentificacion);
+        }
+
+        // ==================== BÚSQUEDA PREDICTIVA ====================
+        function manejarInputBusqueda(event) {
+            const valor = event.target.value.trim();
+            
+            if (timerSugerencias) {
+                clearTimeout(timerSugerencias);
+            }
+            
+            if (valor.length >= 3) {
+                timerSugerencias = setTimeout(() => {
+                    buscarSugerencias(valor);
+                }, 300);
+            } else {
+                ocultarSugerencias();
+            }
+        }
+
+        function buscarSugerencias(fragmento) {
+            google.script.run
+                .withSuccessHandler(mostrarSugerencias)
+                .withFailureHandler(function(error) {
+                    console.warn('Error en sugerencias:', error);
+                })
+                .busquedaPredictiva(fragmento, 5);
+        }
+
+        function mostrarSugerencias(resultado) {
+            const suggestionsDiv = document.getElementById('suggestions');
+            
+            if (resultado.success && resultado.sugerencias.length > 0) {
+                let html = '';
+                resultado.sugerencias.forEach(sugerencia => {
+                    html += `
+                        <div class="suggestion-item" onclick="seleccionarSugerencia('${sugerencia.nro_identificacion}')">
+                            <div class="suggestion-id">${sugerencia.nro_identificacion}</div>
+                            <div class="suggestion-name">${sugerencia.nombre_titular}</div>
+                        </div>
+                    `;
+                });
+                
+                suggestionsDiv.innerHTML = html;
+                suggestionsDiv.style.display = 'block';
+            } else {
+                ocultarSugerencias();
+            }
+        }
+
+        function seleccionarSugerencia(nroIdentificacion) {
+            document.getElementById('nroIdentificacion').value = nroIdentificacion;
+            ocultarSugerencias();
+            buscarCliente();
+        }
+
+        function ocultarSugerencias() {
+            setTimeout(() => {
+                document.getElementById('suggestions').style.display = 'none';
+            }, 150);
+        }
+
+        function manejarEnterBusqueda(e) {
+            if (e.key === 'Enter') {
+                ocultarSugerencias();
+                buscarCliente();
+            }
+        }
+
+        // ==================== PROCESAMIENTO DE RESULTADOS ====================
+        function procesarResultadoBusqueda(resultado) {
+            mostrarLoading(false);
+            deshabilitarBusqueda(false);
+            document.getElementById("load-info").style = "display: true;"
+
+            if (resultado.success) {
+                clienteActual = resultado.cliente;
+                obligacionesActuales = resultado.obligaciones;
+                
+                mostrarInformacionCliente(resultado.cliente);
+                mostrarObligaciones(resultado.obligaciones);
+                mostrarSeccionAccion();
+                
+                const tiempoTotal = resultado.stats?.tiempoBusqueda || 0;
+                const fromCache = resultado.stats?.fromCache ? ' (desde cache)' : '';
+                
+                mostrarMensaje(
+                    `Cliente encontrado: ${resultado.totalRegistros} obligaciones en ${tiempoTotal}ms${fromCache}`, 
+                    'success'
+                );
+            } else {
+                const tiempoTotal = resultado.stats?.tiempoBusqueda || 0;
+                mostrarMensaje(`${resultado.message} (${tiempoTotal}ms)`, 'error');
+            }
+        }
+
+        function procesarErrorBusqueda(error) {
+            mostrarLoading(false);
+            deshabilitarBusqueda(false);
+            mostrarMensaje('Error al buscar cliente: ' + error.message, 'error');
+        }
+
+        // ==================== VISUALIZACIÓN ====================
+        function mostrarInformacionCliente(cliente) {
+            document.getElementById('nombreCliente').textContent = cliente.nombre_titular;
+            document.getElementById('clientInfo').style.display = 'block';
+        }
+
+        function mostrarObligaciones(obligaciones) {
+            const tbody = document.getElementById('obligationsBody');
+            tbody.innerHTML = '';
+
+            obligaciones.forEach((obligacion, index) => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td class="checkbox-cell">
+                        <input type="checkbox" id="select_${index}" onchange="actualizarSeleccion(${index})">
+                    </td>
+                    <td>${obligacion.nro_producto}</td>
+                    <td>${obligacion.recuperador_generico}</td>
+                    <td>${obligacion.cant_dias_mora_actual}</td>
+                    <td>${formatearMoneda(obligacion.monto_pago_facturacion)}</td>
+                    <td>${formatearMoneda(obligacion.monto_pago_minimo_actual)}</td>
+                    <td>${formatearMoneda(obligacion.monto_mora_pesos)}</td>
+                    <td>${formatearMoneda(obligacion.monto_total_cliente)}</td>
+                    <td>${formatearFecha(obligacion.fecha_pago_actual)}</td>
+                `;
+            });
+
+            document.getElementById('obligationsTable').style.display = 'block';
+        }
+
+        function mostrarSeccionAccion() {
+            document.getElementById('actionSection').style.display = 'block';
+        }
+
+        function actualizarSeleccion(index) {
+            const checkbox = document.getElementById(`select_${index}`);
+            const tbody = document.getElementById('negotiationBody');
+            
+            if (checkbox.checked) {
+                const obligacion = obligacionesActuales[index];
+                const row = tbody.insertRow();
+                row.id = `negotiation_${index}`;
+                row.innerHTML = `
+                    <td>${obligacion.nro_producto}</td>
+                    <td>
+                        <select>
+                            <option value="">Seleccione</option>
+                            <option value="por_cliente">Por Cliente</option>
+                            <option value="por_producto">Por Producto</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select>
+                            <option value="">Seleccione</option>
+                            <option value="ACLEY">Acuerdo de Ley</option>
+                            <option value="ACP">Acuerdo Pago en Mora</option>
+                            <option value="ACULEY">Acuerdo de Ley PJ o PNCN</option>
+                            <option value="ACUPR">Acuerdo Privado PJ o PNCN</option>
+                            <option value="APCCC">Acuerdo de Pago Cartera Castigada Consumo.</option>
+                            <option value="APCCCG">Acuerd de Pag Cart Cast Cons con nueva garantia</option>
+                            <option value="APCCOT">Acuerdo de Pago Cartera  Castigada Consumo  Otros</option>
+                            <option value="APCOB">Acuerdo Pago Cobranza</option>
+                            <option value="BAJT">Restablecimiento de Tasa</option>
+                            <option value="CCUAD">Ciencuadras</option>
+                            <option value="CDAV">Cond.Daviacuerdos</option>
+                            <option value="CDIA">Cliente al dia</option>
+                            <option value="CDL">Cesión Derecho Litigioso</option>
+                            <option value="CIAPCC">Condonacion Inicial Acuerdo De Pago Cartera Castigada</option>
+                            <option value="CIMUV">Cond.Inter.Mora Unidad VH</option>
+                            <option value="CONDHN">Reversión costos cobranza</option>
+                            <option value="CONDIM">Condonación Intereses Mora</option>
+                            <option value="CONCMP">Condonaciòn cancelaciòn Mora Pyme</option>
+                            <option value="CONCTP">Condona.Cancelac.Tot.Pyme</option>
+                            <option value="CPFI">Consolidación de pasivos Finagro</option>
+                            <option value="CPBANC">Consolidación de pasivos Bancoldex</option>
+                            <option value="CPTCON">Condonación PT Consumo Vigente</option>
+                            <option value="">Condonación PT Castigada</option>
+                            <option value="CPTHP">Condonación PT Hipotecario</option>
+                            <option value="CPTVH">Condonación PT Vehículo</option>
+                            <option value="DPHP">Dación en Pago HP</option>
+                            <option value="DPLC">Dación en Pago con opción Leasing</option>
+                            <option value="DPVH">Dación en Pago VH</option>
+                            <option value="ENCEFE">Encuesta Efectiva</option>
+                            <option value="ENCNEF">Encuesta no Efectiva</option>
+                            <option value="DPRES">Dación en Pago y/o Restitución-Unidad de Vehículo</option>
+                            <option value="DPGI">Daviacuerdo con  periodo de gracia intermedio</option>
+                            <option value="M026">Modificado 026</option>
+                            <option value="NORLB">Unificación tradicional Libranza</option>
+                            <option value="NOROTR">Unificación tradicional Otros</option>
+                            <option value="NPG4PY">Normalización PG4 Mipyme</option>
+                            <option value="PCMORA">Prorrogas cuotas en mora</option>
+                            <option value="PERGRA">Periodo de Gracia</option>
+                            <option value="PHOY">Cliente Pago Hoy</option>
+                            <option value="PP">Promesa de Pago</option>
+                            <option value="RC">Reclasificación Cartera Titularizada</option>
+                            <option value="RE">Rediferido</option>
+                            <option value="REA">Redif.Agro-Cafetera</option>
+                            <option value="RECAP">Reclasificación de capital</option>
+                            <option value="REMTT">Remate a Terceros</option>
+                            <option value="REPCH">Hipotecario REPMAS</option>
+                            <option value="REPCS">Consumo REPMAS</option>
+                            <option value="REPMA3">Unificación Tasa Escalona V3.0</option>
+                            <option value="REM3PG">Unificacion Tasa Escalonada V3.0 y PG 4 Meses</option>
+                            <option value="REPPY">Mipyme REPMAS</option>
+                            <option value="RCMOR">Refinanciación cuotas en mora</option>
+                            <option value="REJ">Rediferido TC Empresarial</option>
+                            <option value="REDOL">Rediferido Normal Dólares</option>
+                            <option value="REEHP">Reest.HP y Leasing</option>
+                            <option value="REECT">Reest.Cartera Titularizada</option>
+                            <option value="REEVH">Reestruc.Vehículo</option>
+                            <option value="REEUVH">Reest.Unidad VH</option>
+                            <option value="REEST">Reestructuración</option>
+                            <option value="REESTG">Reestructuración con nueva garantia</option>
+                            <option value="REELVL">Reest.Línea Lib.y VH Lib.</option>
+                            <option value="REEPJO">Reestructuración PJ Otros</option>
+                            <option value="REESPJ">Reestructuración PJ</option>
+                            <option value="REESNA">Reestructuración Nanocredito</option>
+                            <option value="RELE">Restitución Leasing</option>
+                            <option value="REPE">Reperfilamiento</option>
+                            <option value="RTA">Reestruc.TC Agro Cafetero</option>
+                            <option value="SDESE">Seguro de Desempleo</option>
+                            <option value="SDEBIT">Solicitud Débito</option>
+                            <option value="SN">Sin Negociacion</option>
+                            <option value="UNINF">Unificación de inflación con Pagaré</option>
+                            <option value="UNINFS">Unificación inflación simplificada</option>
+                            <option value="UNINFG">Unificación de inflación con nueva garantía HP</option>
+                            <option value="UNINFV">Unificación de inflación con nueva garantía VH</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" min="0" step="1000" placeholder="Valor" style="width:90px;">
+                    </td>
+                    <td>
+                        <input type="date" style="width:130px;">
+                    </td>
+                    <td>
+                        <input type="date" style="width:130px;">
+                    </td>
+                    <td>${formatearMoneda(obligacion.monto_total_cliente)}</td>
+                `;
+                
+                document.getElementById('negotiationTable').style.display = 'block';
+            } else {
+                const row = document.getElementById(`negotiation_${index}`);
+                if (row) {
+                    row.remove();
+                }
+                
+                if (tbody.children.length === 0) {
+                    document.getElementById('negotiationTable').style.display = 'none';
+                }
+            }
+        }
+
+        // ==================== FUNCIONES AUXILIARES ====================
+        function mostrarLoading(mostrar) {
+            document.getElementById('loading').style.display = mostrar ? 'block' : 'none';
+        }
+
+        function mostrarMensaje(mensaje, tipo) {
+            const div = document.getElementById('mensaje');
+            div.textContent = mensaje;
+            div.className = `message ${tipo}`;
+            div.style.display = 'block';
+            
+            setTimeout(() => {
+                div.style.display = 'none';
+            }, 5000);
+        }
+
+        function limpiarResultados() {
+            document.getElementById('clientInfo').style.display = 'none';
+            document.getElementById('obligationsTable').style.display = 'none';
+            document.getElementById('actionSection').style.display = 'none';
+            document.getElementById('negotiationTable').style.display = 'none';
+            document.getElementById('mensaje').style.display = 'none';
+            
+            clienteActual = null;
+            obligacionesActuales = [];
+        }
+
+        function deshabilitarBusqueda(deshabilitar) {
+            document.getElementById('btnBuscar').disabled = deshabilitar;
+        }
+
+        function formatearMoneda(valor) {
+            if (!valor || valor === '0') return '$0';
+            const numero = parseFloat(valor.replace(/[^\d.-]/g, ''));
+            if (isNaN(numero)) return '$0';
+            return new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                minimumFractionDigits: 0
+            }).format(numero);
+        }
+
+        function formatearFecha(fecha) {
+            if (!fecha) return '';
+            // Si viene en formato YYYY/MM/DD, convertir a DD/MM/YYYY
+            if (fecha.includes('/')) {
+                const partes = fecha.split('/');
+                if (partes.length === 3 && partes[0].length === 4) {
+                    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+                }
+            }
+            return fecha;
+        }
+    </script>
+</body>
+</html>
