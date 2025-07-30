@@ -612,13 +612,31 @@
             input.addEventListener('blur', ocultarSugerencias);
         });
 
-        function cargarInformacion(){
-          const tipoAccion = document.getElementById("tipoAccion").text;
-          console.log(tipoAccion)
+        function cargarInformacion() {
+            const respuesta = {
+                nroIdentificacion : document.getElementById("nroIdentificacion").value,
+                tipoAccion: document.getElementById("tipoAccion").value,
+                tipoResultado: document.getElementById("tipoResultado").value,
+                codigoTarea: document.getElementById("codigoTarea").value,
+                telefono: document.getElementById("telefono").value,
+                fechaInicio: document.getElementById("fechaInicio").value,
+                horaInicio: document.getElementById("horaInicio").value,
+                motivoNoPago: document.getElementById("motivoNoPago").value,
+                fechaFin: document.getElementById("fechaFin").value,
+                horaFin: document.getElementById("horaFin").value,
+                comentario: document.getElementById("comentario").value
+            };
 
+            google.script.run
+                .withSuccessHandler(function(msg) {
+                    alert('Datos guardados en Excel: ' + msg);
+                })
+                .withFailureHandler(function(error) {
+                    alert('Error al guardar Excel: ' + error.message);
+                })
+                .guardarDatosExcel(respuesta);
 
-
-
+            console.log (nro_identificacion)
         }
 
         // ==================== BÚSQUEDA PRINCIPAL ====================

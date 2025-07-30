@@ -206,6 +206,108 @@ function busquedaBinariaOptimizada(nroIdentificacionBuscado) {
   return encontrados;
 }
 
+// ==================== FUNCIÓN CREAR excel ====================
+
+function guardarDatosExcel(respuesta) {
+  var folderId = "1uiVUixE2nIWhM_lx0YwpAsKd3stLUve8"; // ID de tu carpeta
+  var folder = DriveApp.getFolderById(folderId);
+  var fileName = "negociaciones.xlsx";
+  var files = folder.getFilesByName(fileName);
+  var sheet, ss, file;
+
+  // Encabezados exactos
+  var headers = [
+    "Acción", "Tipo de identificación cliente", "Nro de identificación cliente", "Fecha de gestión", "Hora de gestión",
+    "Nro de crédito", "Teléfono donde se realizó la gestión", "Extensión donde se realizó la gestión",
+    "Ciudad a la que pertenece el teléfono o la dirección", "Tipo de teléfono", "Tipo de Dirección", "Dirección",
+    "Código de gestor", "Código de recuperador", "Tipo de resultado", "Contacto", "Motivo de no pago", "Nivel de ingresos",
+    "Tipo de Negociación", "Fecha de la negociación", "Hora de la negociación", "Fecha de la documentación", "Fecha de Pago",
+    "Valor de la Negociación", "Código del reporte a tercero", "Fecha del Reporte a tercero", "Hora del Reporte a tercero",
+    "Tarea", "Fecha Tarea Desde", "Fecha Tarea Hasta", "Hora Tarea desde", "Hora  Tarea Hasta", "Comentarios",
+    "Comentarios Terceros", "Consecutivo Rechazo", "Consecutivo Registro Relativo", "Fecha de Generación", "Hora de Generación"
+  ];
+
+  if (files.hasNext()) {
+    file = files.next();
+    ss = SpreadsheetApp.openById(file.getId());
+    sheet = ss.getSheets()[0];
+  } else {
+    ss = SpreadsheetApp.create(fileName);
+    sheet = ss.getActiveSheet();
+    sheet.appendRow(headers);
+    var tempFile = DriveApp.getFileById(ss.getId());
+    folder.addFile(tempFile);
+    try { DriveApp.getRootFolder().removeFile(tempFile); } catch(e){}
+  }
+
+  // Utilidad para rellenar ceros a la izquierda (si vacío, todos ceros)
+  function pad(value, length) {
+    value = value ? value.toString().trim() : "";
+    if (!value) return "0".repeat(length);
+    while (value.length < length) value = "0" + value;
+    return value;
+  }
+
+  // Utilidad para rellenar espacios a la derecha (si vacío, todos espacios)
+  function padRight(value, length) {
+    value = value ? value.toString().trim() : "";
+    if (!value) return " ".repeat(length);
+    while (value.length < length) value = value + " ";
+    return value;
+  }
+
+  // Fecha y hora de generación
+  var now = new Date();
+  var fechaGeneracion = Utilities.formatDate(now, Session.getScriptTimeZone(), "yyyyMMdd");
+  var horaGeneracion = Utilities.formatDate(now, Session.getScriptTimeZone(), "HHmmss");
+
+  // Construir la fila según el formato solicitado
+  var fila = [
+  respuesta.tipoAccion || "",                  // Acción
+  pad(respuesta.tipoIdentificacion, 2) || "01",            // Tipo de identificación cliente (2 dígitos)
+  pad(respuesta.nroIdentificacion, 12),            // Nro de identificación cliente (12 dígitos)
+  respuesta.fechaGestion || fechaGeneracion,      // Fecha de gestión (yyyymmdd)
+  pad(respuesta.horaGestion || horaGeneracion, 6),                   // Hora de gestión (hhmmss)
+  pad(respuesta.nroCredito, 16),                   // Nro de crédito (16 dígitos)
+  pad(respuesta.telefono, 10),                     // Teléfono (10 dígitos)
+  pad(respuesta.extension, 6),                     // Extensión (6 dígitos)
+  pad(respuesta.ciudad, 11),                       // Ciudad (11 dígitos)
+  pad(respuesta.tipoTelefono, 2),                  // Tipo de teléfono (2 dígitos)
+  pad(respuesta.tipoDireccion, 2),                 // Tipo de Dirección (2 dígitos)
+  padRight(respuesta.direccion, 61),               // Dirección (61 espacios)
+  padRight(respuesta.codigoGestor, 9),             // Código de gestor (9 espacios)
+  padRight(respuesta.codigoRecuperador, 6),        // Código de recuperador (6 espacios)
+  respuesta.tipoResultado || "",                   // Tipo de resultado
+  respuesta.contacto || "",                        // Contacto
+  respuesta.motivoNoPago || "",                    // Motivo de no pago
+  respuesta.nivelIngresos || "",                   // Nivel de ingresos
+  respuesta.tipoNegociacion || "",                 // Tipo de Negociación
+  respuesta.fechaNegociacion || "",                // Fecha de la negociación
+  respuesta.horaNegociacion || "",                 // Hora de la negociación
+  respuesta.fechaDocumentacion || "",              // Fecha de la documentación
+  respuesta.fechaPago || "",                       // Fecha de Pago
+  pad(respuesta.valorNegociacion, 21),             // Valor de la Negociación (21 dígitos)
+  respuesta.codigoReporteTercero || "",            // Código del reporte a tercero
+  respuesta.fechaReporteTercero || "",             // Fecha del Reporte a tercero
+  respuesta.horaReporteTercero || "",              // Hora del Reporte a tercero
+  respuesta.codigoTarea || "",                     // Tarea
+  respuesta.fechaInicio || "",                     // Fecha Tarea Desde
+  respuesta.fechaFin || "",                        // Fecha Tarea Hasta
+  respuesta.horaInicio || "",                      // Hora Tarea desde
+  respuesta.horaFin || "",                         // Hora  Tarea Hasta
+  respuesta.comentario || "",                      // Comentarios
+  respuesta.comentarioTerceros || "",              // Comentarios Terceros
+  pad(respuesta.consecutivoRechazo, 10),           // Consecutivo Rechazo (10 dígitos)
+  pad(respuesta.consecutivoRegistroRelativo, 10),  // Consecutivo Registro Relativo (10 dígitos)
+  pad(respuesta.fechaGeneracion || fechaGeneracion, 8), // Fecha de Generación (yyyymmdd)
+  pad(respuesta.horaGeneracion || horaGeneracion, 6)    // Hora de Generación (hhmmss)
+];
+
+  sheet.appendRow(fila);
+
+  return "Archivo Excel actualizado correctamente";
+}
+
 // ==================== FUNCIÓN PRINCIPAL OPTIMIZADA ====================
 function obtenerDatosClientePorId(nroIdentificacion = 36170576, fileId = null) {
   const tiempoInicio = Date.now();
